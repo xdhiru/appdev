@@ -1,0 +1,141 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(QuizApp());
+}
+
+class QuizApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Messi Quiz',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: QuizScreen(),
+    );
+  }
+}
+
+class QuizScreen extends StatefulWidget {
+  @override
+  _QuizScreenState createState() => _QuizScreenState();
+}
+
+class _QuizScreenState extends State<QuizScreen> {
+  int _currentQuestionIndex = 0;
+  int _score = 0;
+  List<Question> _questions = [
+    Question(
+      'What is Lionel Messi\'s nationality?',
+      ['Argentinian', 'Brazilian', 'Spanish', 'Portuguese'],
+      0,
+    ),
+    Question(
+      'Which club did Messi play for during his entire professional career?',
+      ['Barcelona', 'Real Madrid', 'Paris Saint-Germain', 'Manchester City'],
+      0,
+    ),
+    Question(
+      'How many times has Messi won the Ballon d\'Or?',
+      ['5', '6', '7', '8'],
+      2,
+    ),
+    Question(
+      'In which year did Messi win his first Ballon d\'Or?',
+      ['2009', '2010', '2011', '2012'],
+      0,
+    ),
+  ];
+
+  void _handleAnswerSelected(int selectedAnswerIndex) {
+    if (selectedAnswerIndex ==
+        _questions[_currentQuestionIndex].correctAnswerIndex) {
+      setState(() {
+        _score++;
+      });
+    }
+
+    if (_currentQuestionIndex < _questions.length - 1) {
+      setState(() {
+        _currentQuestionIndex++;
+      });
+    } else {
+      _showResultDialog();
+    }
+  }
+
+  void _showResultDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Quiz Result'),
+          content: Text('You scored $_score out of ${_questions.length}'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Play Again'),
+              onPressed: () {
+                setState(() {
+                  _currentQuestionIndex = 0;
+                  _score = 0;
+                });
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Messi Quiz'),
+      ),
+      body: Container(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              'Question ${_currentQuestionIndex + 1}/${_questions.length}',
+              style: TextStyle(fontSize: 20.0),
+            ),
+            SizedBox(height: 8.0),
+            Text(
+              _questions[_currentQuestionIndex].questionText,
+              style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 16.0),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: _questions[_currentQuestionIndex]
+                  .answerOptions
+                  .asMap()
+                  .entries
+                  .map((entry) {
+                int answerIndex = entry.key;
+                String answerText = entry.value;
+                return ElevatedButton(
+                  onPressed: () => _handleAnswerSelected(answerIndex),
+                  child: Text(answerText),
+                );
+              }).toList(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class Question {
+  final String questionText;
+  final List<String> answerOptions;
+  final int correctAnswerIndex;
+
+  Question(this.questionText, this.answerOptions, this.correctAnswerIndex);
+}

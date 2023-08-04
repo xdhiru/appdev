@@ -1,0 +1,113 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(QuizApp());
+}
+
+class QuizApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Quiz App',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: QuizScreen(),
+    );
+  }
+}
+
+class QuizScreen extends StatefulWidget {
+  @override
+  _QuizScreenState createState() => _QuizScreenState();
+}
+
+class _QuizScreenState extends State<QuizScreen> {
+  int _currentQuestionIndex = 0;
+  int _score = 0;
+
+  List<Question> _questions = [
+    Question('Flutter is developed by Google.', true),
+    Question('Dart is a statically typed language.', false),
+    Question('Widgets are immutable in Flutter.', true),
+  ];
+
+  void _answerQuestion(bool answer) {
+    if (_currentQuestionIndex < _questions.length - 1) {
+      setState(() {
+        _currentQuestionIndex++;
+        if (_questions[_currentQuestionIndex].isCorrect == answer) {
+          _score++;
+        }
+      });
+    } else {
+      // Quiz finished
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Quiz Finished'),
+            content: Text('Your score: $_score out of ${_questions.length}'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  setState(() {
+                    _currentQuestionIndex = 0;
+                    _score = 0;
+                  });
+                },
+                child: Text('Restart'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Quiz App'),
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              'Question ${_currentQuestionIndex + 1}',
+              style: TextStyle(fontSize: 20.0),
+            ),
+            SizedBox(height: 8.0),
+            Text(
+              _questions[_currentQuestionIndex].text,
+              style: TextStyle(fontSize: 24.0),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 16.0),
+            ElevatedButton(
+              onPressed: () => _answerQuestion(true),
+              child: Text('True'),
+            ),
+            SizedBox(height: 8.0),
+            ElevatedButton(
+              onPressed: () => _answerQuestion(false),
+              child: Text('False'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class Question {
+  final String text;
+  final bool isCorrect;
+
+  Question(this.text, this.isCorrect);
+}

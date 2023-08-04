@@ -1,0 +1,147 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Calculator',
+      theme: ThemeData(
+        primarySwatch: Colors.deepPurple,
+      ),
+      home: const MyHomePage(),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  int firstNum;
+  int secondNum;
+  String textDisplay = '';
+  String res = '';
+  String oprtPerform = '';
+
+  void buttonclick(String butval) {
+    if (butval == 'C') {
+      textDisplay = '';
+      firstNum = 0;
+      secondNum = 0;
+    } else if (butval == '+' ||
+        butval == 'x' ||
+        butval == '/' ||
+        butval == '-') {
+      firstNum = int.parse(textDisplay);
+      res = '';
+      oprtPerform = butval;
+    } else if (butval == '=') {
+      secondNum = int.parse(textDisplay);
+      if (oprtPerform == '+') {
+        res = (firstNum + secondNum).toString();
+      }
+      if (oprtPerform == '-') {
+        res = (firstNum - secondNum).toString();
+      }
+      if (oprtPerform == 'x') {
+        res = (firstNum * secondNum).toString();
+      }
+      if (oprtPerform == '/') {
+        res = (firstNum / secondNum).toString();
+      }
+    } else {
+      res = int.parse(textDisplay + butval).toString();
+    }
+    setState(() {
+      textDisplay = res;
+    });
+  }
+
+  Widget custombutton(String butval) {
+    return Expanded(
+      child: OutlinedButton(
+        onPressed: () => buttonclick(butval),
+        child: Text(
+          butval,
+          style: TextStyle(
+            fontSize: 50.0,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Center(child: Text('Calculator')),
+      ),
+      body: Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            Expanded(
+              child: Container(
+                padding: EdgeInsets.all(10.0),
+                alignment: Alignment.bottomRight,
+                child: Text(
+                  '$textDisplay',
+                  style: TextStyle(
+                    fontSize: 30.0,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+            Row(
+              children: <Widget>[
+                custombutton('7'),
+                custombutton('8'),
+                custombutton('9'),
+                custombutton('+'),
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                custombutton('4'),
+                custombutton('5'),
+                custombutton('6'),
+                custombutton('-'),
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                custombutton('1'),
+                custombutton('2'),
+                custombutton('3'),
+                custombutton('x'),
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                custombutton('C'),
+                custombutton('0'),
+                custombutton('='),
+                custombutton('/'),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

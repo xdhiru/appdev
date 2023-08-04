@@ -1,0 +1,83 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(BasicApp());
+}
+
+class BasicApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Basic App',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: BasicScreen(),
+    );
+  }
+}
+
+class BasicScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Basic App'),
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'Hello, Flutter!',
+            style: TextStyle(
+              fontSize: 24.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 16.0),
+          Container(
+            width: 200.0,
+            height: 200.0,
+            decoration: BoxDecoration(
+              color: Colors.blue,
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: Center(
+              child: Icon(
+                Icons.thumb_up,
+                color: Colors.white,
+                size: 100.0,
+              ),
+            ),
+          ),
+          SizedBox(height: 16.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  // Action to perform when Button 1 is pressed
+                },
+                child: Text('Button 1'),
+              ),
+              SizedBox(width: 16.0),
+              ElevatedButton(
+                onPressed: () {
+                  // Action to perform when Button 2 is pressed
+                },
+                child: Text('Button 2'),
+              ),
+            ],
+          ),
+          SizedBox(height: 16.0),
+          Image(
+            image: AssetImage('images/plate44.jpg'),
+            width: 200,
+            height: 200,
+            alignment: Alignment.bottomCenter,
+          ),
+        ],
+      ),
+    );
+  }
+}
